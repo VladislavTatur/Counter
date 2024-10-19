@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import {Input} from './Input'
-import {ChangeEvent} from 'react'
+import {ChangeEvent, KeyboardEvent} from 'react'
+import {useAutoAnimate} from '@formkit/auto-animate/react'
 
 type PersonPropsType = {
   value: number | string
@@ -8,23 +9,25 @@ type PersonPropsType = {
   name: string
   data: number[]
   sumPerson: number | string
+  onKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void
 }
 
-export const Person = ({value, onChange, name, data, sumPerson}: PersonPropsType) => {
+export const Person = ({value, onChange, name, data, sumPerson,onKeyDown}: PersonPropsType) => {
+  const [listRef] = useAutoAnimate<HTMLUListElement>()
   return (
     <div>
       <Name>
         {name}
       </Name>
       <Data>
-        <List>
+        <List  ref={listRef}>
           {data.length ? data.map(el => <li>{el}</li>
           ) : (<li></li>)}
         </List>
 
       </Data>
       <div>Сумма:{sumPerson}</div>
-      <Input value={value} onChange={onChange}/>
+      <Input onKeyDown={onKeyDown} value={value} onChange={onChange}/>
     </div>
 
   )
@@ -34,6 +37,9 @@ const Name = styled.div`
     display: flex;
     gap: 2.3rem;
     justify-content: center;
+    color:  #FFD700;
+    font-size: 1.2rem;
+
 `
 const Data = styled.div`
     display: flex;
@@ -42,4 +48,5 @@ const Data = styled.div`
 const List = styled.ul`
     list-style: none;
     text-align: right;
+    color: black;
 `

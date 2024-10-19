@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {ChangeEvent, useState} from 'react'
+import {ChangeEvent, useState, KeyboardEvent} from 'react'
 import {Person} from './Person'
 
 export const Counter = () => {
@@ -34,18 +34,26 @@ export const Counter = () => {
     SetCurrentNumberYaroslav(newData)
   }
 
+
+
   const onClickHandler = () => {
-    setSumVlad(sumVlad + Number(currentNumberVlad))
-    setSumIlona(sumIlona + Number(currentNumberIlona))
-    setSumYaroslav(sumYaroslav + Number(currentNumberYaroslav))
-    setStateIlona([...stateIlona, Number(currentNumberIlona)])
-    setStateYaroslav([...stateYaroslav, Number(currentNumberYaroslav)])
-    setStateVlad([...stateVlad, Number(currentNumberVlad)])
+    setSumVlad(parseFloat((sumVlad + Number(currentNumberVlad)).toFixed(2)))
+    setSumIlona(parseFloat((sumIlona + Number(currentNumberIlona)).toFixed(2)))
+    setSumYaroslav(parseFloat((sumYaroslav + Number(currentNumberYaroslav)).toFixed(2)))
+    setStateIlona([...stateIlona, parseFloat(Number(currentNumberIlona).toFixed(2))])
+    setStateYaroslav([...stateYaroslav, parseFloat(Number(currentNumberYaroslav).toFixed(2))])
+    setStateVlad([...stateVlad, parseFloat(Number(currentNumberVlad).toFixed(2))])
     setSum(prev => parseFloat((prev + Number(currentNumberVlad) + Number(currentNumberIlona) + Number(currentNumberYaroslav)).toFixed(2)))
     SetCurrentNumberVlad('')
     SetCurrentNumberIlona('')
     SetCurrentNumberYaroslav('')
   }
+
+  const onKeyDownHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onClickHandler();
+    }
+  };
 
   const average: number = Number((sum / family.length).toFixed(2))
   const ilona = (average - sumIlona).toFixed(2)
@@ -74,33 +82,33 @@ export const Counter = () => {
     `)
   }
   const formattedRes = res.split('\n').map((line, index) => (
-    <span key={index}>
+    <Debts key={index}>
     {line}
       <br/>
-  </span>
+  </Debts>
   ))
 
   return (
     <Flex>
       <div style={{display: 'flex', gap: '1rem'}}>
-        <Person sumPerson={sumIlona} data={stateIlona} name={family[0]} value={currentNumberIlona}
-                onChange={onChangeIlonaHandler}/>
-        <Person sumPerson={sumVlad} data={stateVlad} name={family[1]} value={currentNumberVlad}
-                onChange={onChangeVladHandler}/>
-        <Person sumPerson={sumYaroslav} data={stateYaroslav} name={family[2]} value={currentNumberYaroslav}
-                onChange={onChangeYaroslavHandler}/>
+        <Person sumPerson={sumIlona} data={stateIlona} name={debts[0].name} value={currentNumberIlona}
+                onChange={onChangeIlonaHandler} onKeyDown={onKeyDownHandler}/>
+        <Person sumPerson={sumVlad} data={stateVlad} name={debts[1].name} value={currentNumberVlad}
+                onChange={onChangeVladHandler} onKeyDown={onKeyDownHandler}/>
+        <Person sumPerson={sumYaroslav} data={stateYaroslav} name={debts[2].name} value={currentNumberYaroslav}
+                onChange={onChangeYaroslavHandler} onKeyDown={onKeyDownHandler}/>
 
       </div>
 
       <div style={{display: 'flex', justifyContent: 'space-between'}}>
         <div>
-          <button onClick={onClickHandler}>Добавить</button>
+          <SuperButton onClick={onClickHandler}>Добавить</SuperButton>
           <div>
           </div>
         </div>
       </div>
-      <span>Всего за период: {sum}р</span> <br/>
-      <span>Среднее {average}р</span><br/>
+      <small>Всего за период: <Sum>{sum}р</Sum></small> <br/>
+      <small>Среднее <Average>{average}р</Average></small><br/>
       <div>{formattedRes}</div>
 
     </Flex>
@@ -108,5 +116,33 @@ export const Counter = () => {
 }
 
 const Flex = styled.div`
-  
+    background: linear-gradient(135deg, #7F7F7F, #C0C0C0);
+    color: white;
+    padding: 35px;
+    border-radius: 30px;
+    border: solid 2px black;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2)
+`
+const SuperButton = styled.button`
+    background: linear-gradient(135deg, #ff6b6b, #f7d9a0);
+    width: 140px;
+    height: 30px;
+    border-radius: 2rem;
+    margin: 10px 0;
+    color: white;
+`
+
+const Debts = styled.span`
+    color: #ac4c4c;
+    font-weight: bold;
+`
+
+const Sum = styled.span`
+    color: #66ff00;
+    font-weight: bold;
+`
+
+const Average = styled.span`
+    font-weight: bold;
+    color: black;
 `

@@ -4,4 +4,5 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh;
+    background: linear-gradient(135deg, #7F7F7F, #C0C0C0, #A9A9A9, #D3D3D3);
 }
